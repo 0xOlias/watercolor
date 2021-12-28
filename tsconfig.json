@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "outDir": "./dist/",
+    "types": [
+      "node",
+    ],
+    "lib": [
+      "ES6",
+      "DOM"
+    ]
+  },
+  "include": ["src/**/*.ts", "types/**/*.ts", "tool/**/*.ts"],
+  "exclude": ["**/node_modules"],
+  "watchOptions": {
+    "excludeDirectories": ["**/node_modules", "dist"],
+    "excludeFiles": []
+  }
+}
