@@ -30,4 +30,4 @@ const randGaussian = (): number => {
 
 const randomGaussianTruncated = () => 2 * Math.abs(randGaussian() - 0.5)
 
-export { randDec, randNum, randInt, randGaussian, randomGaussianTruncated }
+export { randNum, randInt, randGaussian, randomGaussianTruncated }

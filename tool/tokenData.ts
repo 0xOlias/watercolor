@@ -6,12 +6,8 @@ function genTokenData(projectNum: number) {
   for (let i = 0; i < 64; i++) {
     hash += Math.floor(Math.random() * 16).toString(16)
   }
-  const tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString()
 
-  console.log({
-    hash: hash,
-    tokenId: tokenId,
-  })
+  const tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString()
 
   return {
     hash: hash,

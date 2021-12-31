@@ -1,6 +1,6 @@
 import 'p5/global'
 
-import { randInt, randGaussian } from './random'
+import { randInt, randGaussian } from './rand'
 import { generateBlotLayers } from './blot'
 import { drawPolygon, drawPoint } from './drawUtils'
 import {
@@ -14,18 +14,19 @@ import {
   MAX_LIGHTNESS,
 } from './params'
 
+import type { IBlotData } from './types'
+
 // blot color params
 const SATURATION = randInt(MIN_SATURATION, MAX_SATURATION)
 const LIGHTNESS = randInt(MIN_LIGHTNESS, MAX_LIGHTNESS)
 const LAYER_ALPHA = 1 / LAYER_COUNT
 
 // background color params
-const HUE_BG = randInt(0, 360)
-const SATURATION_BG = randInt(25, 35)
-const LIGHTNESS_BG = 123 - SATURATION_BG
+const HUE_BG = 1
+const SATURATION_BG = 20
+const LIGHTNESS_BG = 95
 
-// layers to be drawn
-const blotLayers: { layerHue: number; vertices: number[][] }[][] = []
+const blots: IBlotData[] = []
 const dots: number[][] = []
 
 export function setup() {
@@ -34,8 +35,22 @@ export function setup() {
 
   background(color(`hsla(${HUE_BG}, ${SATURATION_BG}%, ${LIGHTNESS_BG}%, 1)`))
 
+  // SINGLE BLOT //
+  const blotHue = randInt(0, 360)
+  const sides = randInt(3, 5)
+  const radius = 100
+
+  const xCenter = WIDTH / 2
+  const yCenter = HEIGHT / 2
+
+  const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+  const blotData = { layers: layers }
+
+  blots.push(blotData)
+
   // // RING //
   // const ringCount = 2
+  // const positionDeviation = 30
 
   // for (let c = 0; c < ringCount; c++) {
   //   const clusterHue = randInt(0, 360)
@@ -44,8 +59,6 @@ export function setup() {
   //   const blotCount = Math.floor(ringRadius / 10)
   //   const ringCenterX = randInt(PADDING, WIDTH - PADDING)
   //   const ringCenterY = randInt(PADDING, HEIGHT - PADDING)
-
-  //   const positionDeviation = 30
 
   //   for (let n = 0; n < blotCount; n++) {
   //     const blotHue = clusterHue + 25 * (0.5 - randGaussian())
@@ -59,69 +72,67 @@ export function setup() {
   //     xCenter += positionDeviation * (0.5 - randGaussian())
   //     yCenter += positionDeviation * (0.5 - randGaussian())
 
-  //     const layers = generateBlotLayers({
-  //       blotHue,
-  //       sides,
-  //       radius,
-  //       xCenter,
-  //       yCenter,
-  //     })
+  // const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+  // const blotData = { layers: layers }
 
-  //     blotLayers.push(layers)
+  //     blots.push(blotData)
   //   }
   // }
 
-  // GRID //
-  const rowCount = 3 // randInt(2, 8)
-  const columnCount = 3 // randInt(2, 8)
-  const positionDeviation = 10
+  // // GRID //
+  // const rowCount = randInt(1, 1)
+  // const columnCount = randInt(1, 1)
+  // const positionDeviation = 10
 
-  for (let i = 0; i < rowCount; i++) {
-    const clusterHue = randInt(0, 360)
+  // for (let i = 0; i < rowCount; i++) {
+  //   const clusterHue = randInt(0, 360)
 
-    for (let j = 0; j < columnCount; j++) {
-      const blotHue = clusterHue + 25 * (0.5 - randGaussian())
+  //   for (let j = 0; j < columnCount; j++) {
+  //     const blotHue = clusterHue + 25 * (0.5 - randGaussian())
 
-      const sides = randInt(3, 5)
-      const radius = randInt(80, 120)
+  //     const sides = randInt(3, 5)
+  //     const radius = randInt(200, 300) / (rowCount * columnCount)
 
-      let xCenter = j * ((WIDTH - 2 * PADDING) / (columnCount - 1)) + PADDING
-      let yCenter = i * ((HEIGHT - 2 * PADDING) / (rowCount - 1)) + PADDING
+  //     let xCenter = j * ((WIDTH - 2 * PADDING) / (columnCount - 1)) + PADDING
+  //     let yCenter = i * ((HEIGHT - 2 * PADDING) / (rowCount - 1)) + PADDING
 
-      xCenter += positionDeviation * (0.5 - randGaussian())
-      yCenter += positionDeviation * (0.5 - randGaussian())
+  //     xCenter += positionDeviation * (0.5 - randGaussian())
+  //     yCenter += positionDeviation * (0.5 - randGaussian())
 
-      const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+  //     const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+  //     const blotData = { layers: layers }
 
-      blotLayers.push(layers)
-      dots.push([xCenter, yCenter])
-    }
-  }
+  //     blots.push(blotData)
+  //     dots.push([xCenter, yCenter])
+  //   }
+  // }
 }
 
 let currentLayer = 0
 
 export function draw() {
-  blotLayers.forEach((blotLayer) => {
-    const { layerHue, vertices } = blotLayer[currentLayer]
+  blots.forEach((blotData) => {
+    const { layerHue, vertices } = blotData.layers[currentLayer]
     const colorString = `hsla(${layerHue},${SATURATION}%,${LIGHTNESS}%,${LAYER_ALPHA})`
-    drawPolygon(vertices, colorString)
+
+    fill(color(colorString))
+    drawPolygon(vertices)
+
+    if (currentLayer === 0) {
+      noFill()
+      stroke(color('black'))
+      strokeWeight(2)
+      drawPolygon(vertices)
+      noStroke()
+    }
   })
 
   // if (currentLayer === 0) {
-  // noFill()
-  // stroke(color('black'))
-  // strokeWeight(2)
-  // square(PADDING, PADDING, WIDTH - 2 * PADDING)
-  // noStroke()
-  // }
-
-  // if (currentLayer === 0) {
-  // dots.forEach((dot) => {
-  //   const [x, y] = dot
-  //   const colorString = 'black'
-  //   drawPoint(x, y, colorString)
-  // })
+  //   dots.forEach((dot) => {
+  //     stroke(color('black'))
+  //     strokeWeight(3)
+  //     drawPoint(dot)
+  //   })
   // }
 
   currentLayer += 1

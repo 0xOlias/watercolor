@@ -1,5 +1,4 @@
-const drawPolygon = (vertices: number[][], colorString: string) => {
-  fill(color(colorString))
+const drawPolygon = (vertices: number[][]) => {
   beginShape()
   for (let n = 0; n < vertices.length; n++) {
     vertex(vertices[n][0], vertices[n][1])
@@ -7,10 +6,8 @@ const drawPolygon = (vertices: number[][], colorString: string) => {
   endShape(CLOSE)
 }
 
-const drawPoint = (x: number, y: number, colorString: string) => {
-  stroke(color(colorString))
-  strokeWeight(3)
-  point(x, y)
+const drawPoint = (_point: number[]) => {
+  point(_point[0], _point[1])
   noStroke()
 }
 

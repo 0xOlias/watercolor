@@ -1,4 +1,5 @@
-import { randGaussian } from './random'
+import { randGaussian } from './rand'
+import { drawPolygon } from './drawUtils'
 
 import {
   TIERS,
@@ -6,7 +7,9 @@ import {
   LAYER_COUNT,
   SIDE_MAGNITUDE_MIN,
   SIDE_MAGNITUDE_MAX,
+  LAYER_HUE_DEVIATION_MAGNITUDE,
 } from './params'
+import type { ILayerData } from './types'
 
 const deformVertices = (vertices: number[][], magnitudeModifiers: number[]) => {
   const result = []
@@ -60,7 +63,7 @@ const generateBlotLayers = ({
   radius: number
   xCenter: number
   yCenter: number
-}) => {
+}): ILayerData[] => {
   const layers = []
 
   // generate magnitude modifier array for this blot
@@ -94,7 +97,8 @@ const generateBlotLayers = ({
         secondaryVertices = deformVertices(secondaryVertices, magnitudeModifiers)
       }
 
-      const layerHue = (Math.floor(blotHue + 100 * (0.5 - randGaussian())) + 360) % 360
+      const layerHue =
+        (Math.floor(blotHue + LAYER_HUE_DEVIATION_MAGNITUDE * (0.5 - randGaussian())) + 360) % 360
 
       // add layer
       layers.push({
