@@ -4,8 +4,11 @@
     <meta charset="utf-8" />
     <title>Watercolor</title>
 
-    <!-- import p5 -->
+    <!-- load p5 from cdn -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+
+    <!-- if not found on cdn, try to load local copy -->
+    <script>createCanvas || document.write('<script src="p5.js"><\/script>')</script>
 
     <!-- inject tokenData -->
     <script src="tokenData.js"></script>

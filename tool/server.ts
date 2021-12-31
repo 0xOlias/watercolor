@@ -11,7 +11,6 @@ liveServer.start({
   logLevel: 2,
   open: false,
   root: './www',
-  // wait: 1,
   middleware: [
     async (req, res, next) => {
       if (req.url === '/main.min.js') {

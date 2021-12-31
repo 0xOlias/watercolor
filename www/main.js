@@ -156,15 +156,15 @@ function setup() {
     //   }
     // }
     // GRID //
-    const rowCount = randInt(2, 8);
-    const columnCount = randInt(2, 8);
-    const positionDeviation = 70;
+    const rowCount = 3; // randInt(2, 8)
+    const columnCount = 3; // randInt(2, 8)
+    const positionDeviation = 10;
     for (let i = 0; i < rowCount; i++) {
         const clusterHue = randInt(0, 360);
         for (let j = 0; j < columnCount; j++) {
             const blotHue = clusterHue + 25 * (0.5 - randGaussian());
             const sides = randInt(3, 5);
-            const radius = randInt(10, 15);
+            const radius = randInt(80, 120);
             let xCenter = j * ((WIDTH - 2 * PADDING) / (columnCount - 1)) + PADDING;
             let yCenter = i * ((HEIGHT - 2 * PADDING) / (rowCount - 1)) + PADDING;
             xCenter += positionDeviation * (0.5 - randGaussian());
