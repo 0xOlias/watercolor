@@ -22,32 +22,37 @@ async function bundle() {
     external: ['p5/global'],
   })
 
-  const result = await bundle.write({
-    file: OUTPUT_FILE,
-    format: 'esm',
-  })
+  const { output } = await bundle.generate({ format: 'esm' })
+
+  let src = ''
+  for (const chunk of output) {
+    if (chunk.type === 'chunk') {
+      src += chunk.code
+    }
+  }
 
   await bundle.close()
 
-  return result.output[0].code
+  return src
 }
 
 async function build() {
   let src = await bundle()
 
   // remove import lines (p5/global is only imported for type support)
-  src = src.replace(/import.*/, '')
+  src = src.replace(/^import.*/m, '')
   // rmeove export line, setup() and draw() are only exported to avoid being tree-shook
-  src = src.replace(/export.*/, '')
+  src = src.replace(/^export.*/m, '')
 
-  src = compress(src)
+  const minifiedSrc = compress(src)
 
   await Promise.all([
-    writeFile(OUTPUT_FILE_MIN, src),
+    writeFile(OUTPUT_FILE, src),
+    writeFile(OUTPUT_FILE_MIN, minifiedSrc),
     copyFile('./dist/tool/tokenData.js', './www/tokenData.js'),
   ])
 
-  console.log(`Minified Bytes: ${src.length}`)
+  console.log(`Minified Bytes: ${minifiedSrc.length}`)
 
   return src
 }
