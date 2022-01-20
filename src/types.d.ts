@@ -1,10 +1,10 @@
-interface ILayerData {
+interface Layer {
   layerHue: number
   vertices: number[][]
 }
 
-interface IBlotData {
-  layers: ILayerData[]
+interface Blot {
+  layers: Layer[]
 }
 
-export { ILayerData, IBlotData }
+export { Layer, Blot }

@@ -11,6 +11,8 @@ liveServer.start({
   logLevel: 2,
   open: false,
   root: './www',
+  // @ts-ignore
+  watch: ['index.html', 'main.min.js'],
   middleware: [
     async (req, res, next) => {
       if (req.url === '/main.min.js') {

@@ -11,10 +11,10 @@ const WIDTH = HEIGHT // * 0.6;
 const PADDING = WIDTH * randNum(0.05, 0.2)
 
 // blot primitive params
-const TIERS = 4
+const TIERS = 3
 const SECONDARY_ITERATIONS = 3
 
-const LAYER_COUNT = 1
+const LAYER_COUNT = 50
 
 const SIDE_MAGNITUDE_MIN = 0.6
 const SIDE_MAGNITUDE_MAX = 1.7

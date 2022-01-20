@@ -1,6 +1,4 @@
 import { randGaussian } from './rand'
-import { drawPolygon } from './drawUtils'
-
 import {
   TIERS,
   SECONDARY_ITERATIONS,
@@ -9,10 +7,10 @@ import {
   SIDE_MAGNITUDE_MAX,
   LAYER_HUE_DEVIATION_MAGNITUDE,
 } from './params'
-import type { ILayerData } from './types'
+import type { Layer } from './types'
 
 const deformVertices = (vertices: number[][], magnitudeModifiers: number[]) => {
-  const result = []
+  const result = vertices.slice()
 
   // for each side (grab 2 vertices at a time)
   for (let n = 0; n < vertices.length; n++) {
@@ -44,8 +42,9 @@ const deformVertices = (vertices: number[][], magnitudeModifiers: number[]) => {
     const finalX = startingX + (x1 < x0 ? 1 : -1) * magnitude * Math.cos(theta + gamma)
     const finalY = startingY + (x1 < x0 ? 1 : -1) * magnitude * Math.sin(theta + gamma)
 
-    result.push([x0, y0])
-    result.push([finalX, finalY])
+    const deformedVertex = [finalX, finalY]
+
+    result.splice(2 * n + 1, 0, deformedVertex)
   }
 
   return result
@@ -63,8 +62,8 @@ const generateBlotLayers = ({
   radius: number
   xCenter: number
   yCenter: number
-}): ILayerData[] => {
-  const layers = []
+}): Layer[] => {
+  const layers: Layer[] = []
 
   // generate magnitude modifier array for this blot
   const magnitudeModifiers = [...Array(sides)].map(() => {
@@ -88,7 +87,7 @@ const generateBlotLayers = ({
     // deform baseVertices once
     baseVertices = deformVertices(baseVertices, magnitudeModifiers)
 
-    // for each layer in the tier, deform n more times, then draw
+    // for each layer in the tier, deform n more times
     for (let j = 0; j < LAYER_COUNT / TIERS; j++) {
       let secondaryVertices = baseVertices
 

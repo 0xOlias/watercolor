@@ -14,7 +14,7 @@ import {
   MAX_LIGHTNESS,
 } from './params'
 
-import type { IBlotData } from './types'
+import type { Blot } from './types'
 
 // blot color params
 const SATURATION = randInt(MIN_SATURATION, MAX_SATURATION)
@@ -26,7 +26,7 @@ const HUE_BG = 1
 const SATURATION_BG = 20
 const LIGHTNESS_BG = 95
 
-const blots: IBlotData[] = []
+const blots: Blot[] = []
 const dots: number[][] = []
 
 export function setup() {
@@ -35,18 +35,18 @@ export function setup() {
 
   background(color(`hsla(${HUE_BG}, ${SATURATION_BG}%, ${LIGHTNESS_BG}%, 1)`))
 
-  // SINGLE BLOT //
-  const blotHue = randInt(0, 360)
-  const sides = randInt(3, 5)
-  const radius = 100
+  // // SINGLE BLOT //
+  // const blotHue = randInt(0, 360)
+  // const sides = randInt(3, 5)
+  // const radius = 100
 
-  const xCenter = WIDTH / 2
-  const yCenter = HEIGHT / 2
+  // const xCenter = WIDTH / 2
+  // const yCenter = HEIGHT / 2
 
-  const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
-  const blotData = { layers: layers }
+  // const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+  // const blot = { layers: layers }
 
-  blots.push(blotData)
+  // blots.push(blot)
 
   // // RING //
   // const ringCount = 2
@@ -72,59 +72,57 @@ export function setup() {
   //     xCenter += positionDeviation * (0.5 - randGaussian())
   //     yCenter += positionDeviation * (0.5 - randGaussian())
 
-  // const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
-  // const blotData = { layers: layers }
-
-  //     blots.push(blotData)
-  //   }
-  // }
-
-  // // GRID //
-  // const rowCount = randInt(1, 1)
-  // const columnCount = randInt(1, 1)
-  // const positionDeviation = 10
-
-  // for (let i = 0; i < rowCount; i++) {
-  //   const clusterHue = randInt(0, 360)
-
-  //   for (let j = 0; j < columnCount; j++) {
-  //     const blotHue = clusterHue + 25 * (0.5 - randGaussian())
-
-  //     const sides = randInt(3, 5)
-  //     const radius = randInt(200, 300) / (rowCount * columnCount)
-
-  //     let xCenter = j * ((WIDTH - 2 * PADDING) / (columnCount - 1)) + PADDING
-  //     let yCenter = i * ((HEIGHT - 2 * PADDING) / (rowCount - 1)) + PADDING
-
-  //     xCenter += positionDeviation * (0.5 - randGaussian())
-  //     yCenter += positionDeviation * (0.5 - randGaussian())
-
   //     const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
-  //     const blotData = { layers: layers }
 
-  //     blots.push(blotData)
-  //     dots.push([xCenter, yCenter])
+  //     blots.push({ layers: layers })
   //   }
   // }
+
+  // GRID //
+  const rowCount = randInt(3, 8)
+  const columnCount = randInt(3, 8)
+  const positionDeviation = 10
+
+  for (let i = 0; i < rowCount; i++) {
+    const clusterHue = randInt(0, 360)
+
+    for (let j = 0; j < columnCount; j++) {
+      const blotHue = clusterHue + 25 * (0.5 - randGaussian())
+
+      const sides = randInt(3, 5)
+      const radius = randInt(200, 300) / (rowCount * columnCount)
+
+      let xCenter = j * ((WIDTH - 2 * PADDING) / (columnCount - 1)) + PADDING
+      let yCenter = i * ((HEIGHT - 2 * PADDING) / (rowCount - 1)) + PADDING
+
+      xCenter += positionDeviation * (0.5 - randGaussian())
+      yCenter += positionDeviation * (0.5 - randGaussian())
+
+      const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+
+      blots.push({ layers: layers })
+      dots.push([xCenter, yCenter])
+    }
+  }
 }
 
 let currentLayer = 0
 
 export function draw() {
-  blots.forEach((blotData) => {
-    const { layerHue, vertices } = blotData.layers[currentLayer]
+  blots.forEach((blot) => {
+    const { layerHue, vertices } = blot.layers[currentLayer]
     const colorString = `hsla(${layerHue},${SATURATION}%,${LIGHTNESS}%,${LAYER_ALPHA})`
 
     fill(color(colorString))
     drawPolygon(vertices)
 
-    if (currentLayer === 0) {
-      noFill()
-      stroke(color('black'))
-      strokeWeight(2)
-      drawPolygon(vertices)
-      noStroke()
-    }
+    // if (currentLayer === 0) {
+    //   noFill()
+    //   stroke(color('black'))
+    //   strokeWeight(2)
+    //   drawPolygon(vertices)
+    //   noStroke()
+    // }
   })
 
   // if (currentLayer === 0) {
