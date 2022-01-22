@@ -2,29 +2,22 @@ import 'p5/global'
 
 import { randInt, randGaussian } from './rand'
 import { generateBlotLayers } from './blot'
-import { drawPolygon, drawPoint } from './drawUtils'
+import { drawPolygon, rotate, drawPoint } from './utils'
 import {
   HEIGHT,
   WIDTH,
   PADDING,
   LAYER_COUNT,
-  MIN_SATURATION,
-  MAX_SATURATION,
-  MIN_LIGHTNESS,
-  MAX_LIGHTNESS,
+  BLOT_SATURATION,
+  BLOT_LIGHTNESS,
+  BG_HUE,
+  BG_SATURATION,
+  BG_LIGHTNESS,
 } from './params'
 
 import type { Blot } from './types'
 
-// blot color params
-const SATURATION = randInt(MIN_SATURATION, MAX_SATURATION)
-const LIGHTNESS = randInt(MIN_LIGHTNESS, MAX_LIGHTNESS)
-const LAYER_ALPHA = 1 / LAYER_COUNT
-
-// background color params
-const HUE_BG = 1
-const SATURATION_BG = 20
-const LIGHTNESS_BG = 95
+const origin = [WIDTH / 2, HEIGHT / 2]
 
 const blots: Blot[] = []
 const dots: number[][] = []
@@ -33,7 +26,7 @@ export function setup() {
   createCanvas(WIDTH, HEIGHT)
   noStroke()
 
-  background(color(`hsla(${HUE_BG}, ${SATURATION_BG}%, ${LIGHTNESS_BG}%, 1)`))
+  background(color(`hsla(${BG_HUE}, ${BG_SATURATION}%, ${BG_LIGHTNESS}%, 1)`))
 
   // // SINGLE BLOT //
   // const blotHue = randInt(0, 360)
@@ -42,11 +35,11 @@ export function setup() {
 
   // const xCenter = WIDTH / 2
   // const yCenter = HEIGHT / 2
+  // const center = [xCenter, yCenter]
 
-  // const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
-  // const blot = { layers: layers }
+  // const layers = generateBlotLayers({ blotHue, sides, radius, center })
 
-  // blots.push(blot)
+  // blots.push({ layers: layers, startAngle: 0 })
 
   // // RING //
   // const ringCount = 2
@@ -79,18 +72,19 @@ export function setup() {
   // }
 
   // GRID //
-  const rowCount = randInt(3, 8)
-  const columnCount = randInt(3, 8)
-  const positionDeviation = 10
+  const rowCount = randInt(2, 5)
+  const columnCount = randInt(2, 5)
+
+  const positionDeviation = 30
 
   for (let i = 0; i < rowCount; i++) {
-    const clusterHue = randInt(0, 360)
+    const clusterHue = randInt(0, 359)
 
     for (let j = 0; j < columnCount; j++) {
-      const blotHue = clusterHue + 25 * (0.5 - randGaussian())
+      const blotHue = clusterHue + 10 * (0.5 - randGaussian())
 
       const sides = randInt(3, 5)
-      const radius = randInt(200, 300) / (rowCount * columnCount)
+      const radius = randInt(400, 500) / (rowCount * columnCount)
 
       let xCenter = j * ((WIDTH - 2 * PADDING) / (columnCount - 1)) + PADDING
       let yCenter = i * ((HEIGHT - 2 * PADDING) / (rowCount - 1)) + PADDING
@@ -98,9 +92,13 @@ export function setup() {
       xCenter += positionDeviation * (0.5 - randGaussian())
       yCenter += positionDeviation * (0.5 - randGaussian())
 
-      const layers = generateBlotLayers({ blotHue, sides, radius, xCenter, yCenter })
+      const center = [xCenter, yCenter]
 
-      blots.push({ layers: layers })
+      const layers = generateBlotLayers({ blotHue, sides, radius, center })
+
+      const startAngle = randInt(0, 359)
+
+      blots.push({ layers: layers, startAngle: startAngle })
       dots.push([xCenter, yCenter])
     }
   }
@@ -108,13 +106,23 @@ export function setup() {
 
 let currentLayer = 0
 
+const ROTATION_ARC_LENGTH = randInt(10, 50)
+const ROTATION_PER_LAYER = ROTATION_ARC_LENGTH / LAYER_COUNT
+
 export function draw() {
   blots.forEach((blot) => {
-    const { layerHue, vertices } = blot.layers[currentLayer]
-    const colorString = `hsla(${layerHue},${SATURATION}%,${LIGHTNESS}%,${LAYER_ALPHA})`
+    const { startAngle } = blot
+    const { hue, vertices } = blot.layers[currentLayer]
+    const colorString = `hsla(${hue},${BLOT_SATURATION}%,${BLOT_LIGHTNESS}%,${1 / LAYER_COUNT})`
 
     fill(color(colorString))
-    drawPolygon(vertices)
+
+    // const finalVertices = vertices
+    const finalVertices = vertices.map((vertex) =>
+      rotate(vertex, origin, startAngle + currentLayer * ROTATION_PER_LAYER)
+    )
+
+    drawPolygon(finalVertices)
 
     // if (currentLayer === 0) {
     //   noFill()

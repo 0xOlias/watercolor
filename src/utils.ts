@@ -11,7 +11,7 @@ const drawPoint = (_point: number[]) => {
   noStroke()
 }
 
-const pointInPolygon = (point: number[], polygon: number[][]) => {
+const isPointInPolygon = (point: number[], polygon: number[][]) => {
   const x = point[0]
   const y = point[1]
   let inside = false
@@ -26,4 +26,13 @@ const pointInPolygon = (point: number[], polygon: number[][]) => {
   return inside
 }
 
-export { drawPolygon, drawPoint, pointInPolygon }
+const rotate = (point: number[], origin: number[], angle: number) => {
+  const radians = (Math.PI / 180) * angle
+  const cos = Math.cos(radians)
+  const sin = Math.sin(radians)
+  const nx = cos * (point[0] - origin[0]) + sin * (point[1] - origin[1]) + origin[0]
+  const ny = cos * (point[1] - origin[1]) - sin * (point[0] - origin[0]) + origin[1]
+  return [nx, ny]
+}
+
+export { drawPolygon, drawPoint, isPointInPolygon, rotate }

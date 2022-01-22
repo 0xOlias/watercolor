@@ -16,7 +16,7 @@
       "node",
     ]
   },
-  "include": ["src/**/*.ts", "types/**/*.ts", "tool/**/*.ts"],
+  "include": ["src/**/*.ts", "tool/**/*.ts"],
   "exclude": ["**/node_modules"],
   "watchOptions": {
     "excludeDirectories": ["**/node_modules", "dist"],

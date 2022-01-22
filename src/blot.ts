@@ -54,14 +54,12 @@ const generateBlotLayers = ({
   blotHue,
   sides,
   radius,
-  xCenter,
-  yCenter,
+  center,
 }: {
   blotHue: number
   sides: number
   radius: number
-  xCenter: number
-  yCenter: number
+  center: number[]
 }): Layer[] => {
   const layers: Layer[] = []
 
@@ -73,8 +71,8 @@ const generateBlotLayers = ({
   // create regular polygon
   const regularVertices: number[][] = []
   for (let n = 0; n < sides; n++) {
-    const x = xCenter + radius * Math.cos((2 * Math.PI * n) / sides)
-    const y = yCenter + radius * Math.sin((2 * Math.PI * n) / sides)
+    const x = center[0] + radius * Math.cos((2 * Math.PI * n) / sides)
+    const y = center[1] + radius * Math.sin((2 * Math.PI * n) / sides)
 
     regularVertices.push([x, y])
   }
@@ -101,7 +99,7 @@ const generateBlotLayers = ({
 
       // add layer
       layers.push({
-        layerHue: layerHue,
+        hue: layerHue,
         vertices: secondaryVertices,
       })
     }

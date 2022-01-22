@@ -1,10 +1,11 @@
 interface Layer {
-  layerHue: number
+  hue: number
   vertices: number[][]
 }
 
 interface Blot {
   layers: Layer[]
+  startAngle: number
 }
 
 export { Layer, Blot }

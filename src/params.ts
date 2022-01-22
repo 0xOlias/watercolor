@@ -1,12 +1,12 @@
 // dimension params
 
-import { randNum } from './rand'
+import { randNum, randInt } from './rand'
 
 const WINDOW_WIDTH = window.innerWidth
 const WINDOW_HEIGHT = window.innerHeight
 
 const HEIGHT = WINDOW_HEIGHT
-const WIDTH = HEIGHT // * 0.6;
+const WIDTH = HEIGHT // * 0.6
 
 const PADDING = WIDTH * randNum(0.05, 0.2)
 
@@ -14,19 +14,27 @@ const PADDING = WIDTH * randNum(0.05, 0.2)
 const TIERS = 3
 const SECONDARY_ITERATIONS = 3
 
-const LAYER_COUNT = 50
+const LAYER_COUNT = 100
 
 const SIDE_MAGNITUDE_MIN = 0.6
 const SIDE_MAGNITUDE_MAX = 1.7
 
 // blot color params
-const MIN_SATURATION = 85
+const MIN_SATURATION = 75
 const MAX_SATURATION = 95
 
 const MIN_LIGHTNESS = 40
 const MAX_LIGHTNESS = 50
 
 const LAYER_HUE_DEVIATION_MAGNITUDE = 100
+
+const BLOT_SATURATION = randInt(MIN_SATURATION, MAX_SATURATION)
+const BLOT_LIGHTNESS = randInt(MIN_LIGHTNESS, MAX_LIGHTNESS)
+
+// background color params
+const BG_HUE = randInt(0, 15)
+const BG_SATURATION = 20
+const BG_LIGHTNESS = 95
 
 export {
   WINDOW_WIDTH,
@@ -44,4 +52,9 @@ export {
   MIN_LIGHTNESS,
   MAX_LIGHTNESS,
   LAYER_HUE_DEVIATION_MAGNITUDE,
+  BLOT_SATURATION,
+  BLOT_LIGHTNESS,
+  BG_HUE,
+  BG_SATURATION,
+  BG_LIGHTNESS,
 }

@@ -41,7 +41,7 @@ async function build() {
 
   // remove import lines (p5/global is only imported for type support)
   src = src.replace(/^import.*/m, '')
-  // rmeove export line, setup() and draw() are only exported to avoid being tree-shook
+  // remove export line, setup() and draw() are only exported to avoid being tree-shook
   src = src.replace(/^export.*/m, '')
 
   const minifiedSrc = compress(src)
